@@ -1,0 +1,29 @@
+import board
+import busio
+import adafruit_i2cslave
+import digitalio
+import time
+
+# LED výstup
+led = digitalio.DigitalInOut(board.GP15)
+led.switch_to_output(value=False)
+
+# I2C jako slave
+i2c = busio.I2C(board.GP1, board.GP0)  # SCL, SDA
+slave = adafruit_i2cslave.I2CSlave(i2c, [0x42])
+
+buffer = bytearray(8)
+
+while True:
+    try:
+        with slave:
+            n = slave.readinto(buffer)
+            if n:
+                msg = buffer[:n].decode("utf-8").strip()
+                if msg == "ON":
+                    led.value = True
+                elif msg == "OFF":
+                    led.value = False
+    except OSError:
+        pass  # nic nepřijato, ignoruj
+    time.sleep(0.05)

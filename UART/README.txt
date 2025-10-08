@@ -1,0 +1,1 @@
+Obyčejné zapojení UART s vstupem/výstupem přes sériovou konzoli. Da se posílat text z jednoho na druhý PC
